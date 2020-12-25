@@ -40,7 +40,6 @@ bootMeanDiff = bootstrXmean - bootstrYmean;
 
 CI = zeros(M,2);
 bootCI = zeros(M,2);
-counter = 0;
 for i = 1:M
     %i) parametric ci
     meanDiff = meanX(i) - meanY(i);
