@@ -1,6 +1,6 @@
 % Vasia Zarkadoula
 % Data Analysis 2020
-% Chapter 5 Excerise 4
+% Chapter 5 Excerise 5
 % Linear regression model , non parametric (bootstrap) confidence intervals
 
 clc;
