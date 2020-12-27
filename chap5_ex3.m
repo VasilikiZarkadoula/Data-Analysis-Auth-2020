@@ -1,6 +1,6 @@
 % Vasia Zarkadoula
 % Data Analysis 2020
-% Chapter 5 Excerise 2
+% Chapter 5 Excerise 3
 % Randomization check , student t statistic check
 
 clc;
