@@ -9,12 +9,14 @@ clear;
 n = 100;
 N = 10000;
 
-x = zeros(n,1);
-y = zeros(N,1);
+samples = zeros(n,1);
+m = zeros(N,1);
+% Generate samples from uniform distribution 
 for i = 1:N
     for j = 1:n
-        x = unifrnd(0,1);
+        samples = unifrnd(0,1);
     end
-    y(i) = mean(x);
+    m(i) = mean(samples);
 end
-histfit(y);
+% Plot means of x and normal distribution curve
+histfit(m);
