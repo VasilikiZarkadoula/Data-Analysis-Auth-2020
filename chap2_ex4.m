@@ -14,22 +14,15 @@ N = categorical(n);
 m1 =  meanComparisons(1,2,n);
 m2 =  meanComparisons(0,1,n);
 m3 =  meanComparisons(-1,1,n);
+m = [m1 m2 m3];
 
 % graphic comparison of 1/E[x] and E[1/x] for different values of (a,b)
-figure(1)
-bar(N,m1);
-legend('1/E[x]','E[1/X]')
-xlabel('Number of iterations (n)');
-
-figure(2)
-bar(N,m2);
-legend('1/E[x]','E[1/X]')
-xlabel('Number of iterations (n)');
-
-figure(3)
-bar(N,m3);
-legend('1/E[x]','E[1/X]')
-xlabel('Number of iterations (n)');
+for i = 1:2:length(m)
+    figure(i)
+    bar(N,m(:,i:i+1));
+    legend('1/E[x]','E[1/X]')
+    xlabel('Number of iterations (n)');
+end
 
 
 function m = meanComparisons(a,b,n)
@@ -48,4 +41,5 @@ end
 mean1new = 1./mean1;   %1/E[x]
 m = [mean1new ; mean2]';
 end
+
 
