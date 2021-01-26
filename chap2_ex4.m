@@ -30,9 +30,10 @@ function m = meanComparisons(a,b,n)
 mean1 = zeros(1,length(n));
 mean2 = zeros(1,length(n));
 for j = 1:length(n)
+    x = zeros(1,length(n(j)))
     for i = 1:n(j)
         %random numbers in interval (a,b) from continuous uniform distribution
-        x = unifrnd(a,b);
+        x(i) = unifrnd(a,b);
     end
     mean1(j) = mean(x);     %E[x]
     mean2(j) = mean(1./x);  %E[1/x]
