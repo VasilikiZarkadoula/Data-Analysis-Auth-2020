@@ -4,6 +4,7 @@
 % Simulation of the distribution of the mean 
 % Poisson distribution 
 
+close all;
 clc;
 clear;
 
@@ -14,45 +15,46 @@ lamda = 5;
 n = 10000;
 
     % first method
-x = zeros(1,n);
-for i=1:n
-    x(i) = poissrnd(lamda);
-end
-m = mean(x);
+samples = poissrnd(lamda,n,1);
+m = mean(samples);
 fprintf('lamda = %i and mean(samples) = %3f\n',lamda,m);
 
     % second method
-ml = mle(x,'distribution','poiss');
-fprintf('lamda = %i and mle result = %3f\n',lamda,ml);
+ml = mle(samples,'distribution','poiss');
+fprintf('lamda = %i and mle(samples) = %3f\n',lamda,ml);
+
+if m == ml
+    fprintf('mle(samples) = mean(samples)\n');
+end
 
 %--------------------------------------------------------------------------
 
 %b) create M poisson samples of size n and compute the mean of each sample
 
-M = 1000;
+M = 50;
 n = 10;
-lamda = 7;
-average = mean_Poisson(lamda,M,n);
+lamda = 2;
+average = meanPoisson(lamda,M,n);
 
-function avrg = mean_Poisson(lamda,samples,size)
-x = zeros(samples,size);
-for i=1:samples
-    for j=1:size
-         x(i,j) = poissrnd(lamda);
-    end
-end
+function avrg = meanPoisson(lamda,numOfSamples,sizeOfSamples)
 
-m = mean(x,2);
+samples = poissrnd(lamda,sizeOfSamples,numOfSamples);
+m = mean(samples,2);
 avrg = mean(m);
 
 figure;
 h = histogram(m);
-    % check if center of histogram is lamda
+hold on
+% check if center of histogram is lamda
 lim = h.BinLimits;
 center = (lim(1) + lim(2))/2;
+p1 = plot([center center],ylim,'r');
 hold on
-plot([center center],ylim,'r');
+p2 = plot([lamda lamda],ylim,'y');
+title('Histogram of the mean values of samples from Poisson distribution')
+legend([p1 p2],{'Histogram Center','Lamda'})
 hold off
+
 end
 
 
