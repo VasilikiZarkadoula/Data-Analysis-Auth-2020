@@ -7,25 +7,21 @@
 clc;
 clear;
 
-alpha = 0.05;
-
 % create sample of size n, compute 95% CI
 mu = 15;
 n = 100;  
-x = zeros(1,n);
-for i=1:n
-    x(i) = exprnd(mu);
-end
+sample = exprnd(mu,n,1);
 
     % first method - 95% CI
-sem = std(x)/sqrt(n);                % Standard Error
-ts = tinv([alpha/2  1-alpha/2],n-1); % T-Score
-ci = mean(x) + ts*sem;               % Confidence Intervals
+alpha = 0.05;
+sem = std(sample)/sqrt(n);                % Standard Error
+ts = tinv([alpha/2  1-alpha/2],n-1);      % T-Score
+ci = mean(sample) + ts*sem;               % Confidence Interval
 
     % Second method - 95% CI : ttest
-[~,~,ci2,~] = ttest(x);
+[~,~,ci2,~] = ttest(sample);
 
-    % check if mu is included in ci
+% check if mu is included in ci
 formatSpec1 = 'Confidence interval [%0.3f %0.3f] includes mu = %i\n';
 formatSpec2 = 'Confidence interval [%0.3f %0.3f] does not include mu = %i\n';
 if mu>ci(1) && mu<ci(2)
@@ -39,29 +35,18 @@ end
 % create M samples of size s, compute 95% CI
 M = 1000; 
 s = 100;  
-mu = 3;
-TS = tinv([alpha/2  1-alpha/2],s-1); 
+mu = 15;
 
-y = zeros(M,s);
-SEM = zeros(1,M);
-CI = zeros(M,2);
+samples = exprnd(mu,s,M);
+[~,~,CI,~] = ttest(samples);
+
 counter = 0;
-for i=1:M
-    for j=1:s
-       y(i,j) = exprnd(mu);
-    end
-    SEM(i) = std(y(i,:))/sqrt(s);               
-    CI(i,:) = mean(y(i,:)) + TS*SEM(i);  
-    
-    if CI(i,1)<mu && CI(i,2)>mu
+for i =1:M
+    if CI(1,i)<mu && CI(2,i)>mu
         counter = counter+1;
     end
 end
 
-perc = (counter/M)*100;
-fprintf('mu = %i is included in the confidence interval for the %0.2f%% of the samples\n',mu,perc);
+percentage = (counter/M)*100;
+fprintf('\nmu = %i is included in the confidence interval for the %0.2f%% of the samples\n',mu,percentage);
 
-
-
-
-    
