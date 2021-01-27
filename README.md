@@ -5,3 +5,5 @@
 Chapter 2 -> Probabilities and random variables
 
 Chapter 3 -> Statistic's data
+
+Chapter 4 -> Uncertainty and measurement error
