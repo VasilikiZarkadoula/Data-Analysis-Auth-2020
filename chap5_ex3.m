@@ -18,7 +18,7 @@ permHypothesisTesting = zeros(m,1);
 t = zeros(L,1);
 for i = 1:m
     
-    % parametric
+    % parametric hypothesis testing
     [r,p] = corrcoef(temp(:,i),rain(:,i));
     if( p(1,2) < 0.05 )
         paramHypothesisTesting(i) = 1;
@@ -40,13 +40,10 @@ for i = 1:m
     alpha = 5;
     percentiles = [alpha/2 (100-alpha)/2];
     CI = prctile(t,percentiles);
-    
+    % hypothesis testing
     if( t0 < CI(1) || t0 > CI(2) )
         permHypothesisTesting(i) = 1;
     end
 end
-fprintf('Hypothesis rejected (parametric method) : %0.2f%%\n',(sum(paramHypothesisTesting)/m)*100)
-fprintf('Hypothesis rejected (randomaziation method): %0.2f%%\n',(sum(permHypothesisTesting)/m)*100)
-
-
-
+fprintf('Hypothesis for zero correlation of rain and temperature is rejected (parametric method) : %0.2f%%\n',(sum(paramHypothesisTesting)/m)*100)
+fprintf('Hypothesis for zero correlation of rain and temperature is rejected (randomaziation method): %0.2f%%\n',(sum(permHypothesisTesting)/m)*100)
