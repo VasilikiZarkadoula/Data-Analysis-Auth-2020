@@ -6,6 +6,7 @@
 
 clc;
 clear;
+close all;
 
 n = 10;
 M = 100;
@@ -21,32 +22,31 @@ end
 
 % compute 95% parametric CI and 95% percentile bootstrap CI of mean 
 % for every sample
+
+[~,~,CI,~] = ttest(x);                     %i) parametric ci
+
 bootstrXmean = bootstrp(B,@mean,x);
 lowerLim = (B+1)*alpha/2;
 upperLim = B+1-lowerLim;
 limits = [lowerLim upperLim]/B*100;
-
-CI = zeros(M,2);
-bootCI = zeros(M,2);
-for i=1:M
-    %i) parametric ci
-    [~,~,CI(i,:),~] = ttest(x(:,i)); 
-    %ii) percentile bootstrap ci
-    bootCI(i,:) = prctile(bootstrXmean(:,i),limits); 
-end
+bootCI = prctile(bootstrXmean,limits,1);  %ii) percentile bootstrap ci
 
 % graphic comparison of the two confidence intervals
-bar(CI(:,1));
+bar(CI(1,:));
 hold on
-bar(bootCI(:,1),'r');
-title('Lower Boundries of confidence intervals (Bootstrap in red)')
+bar(bootCI(1,:),'r');
+title('Lower Boundries of confidence intervals')
+legend('Parametric','Bootstrap')
+xlabel('Samples')
 hold off
 
 figure;
-bar(CI(:,2));
+bar(CI(2,:));
 hold on
-bar(bootCI(:,2),'r');
-title('Upper Boundries of confidence intervals  (Bootstrap in red)')
+bar(bootCI(2,:),'r');
+title('Upper Boundries of confidence intervals')
+legend('Parametric','Bootstrap')
+xlabel('Samples')
 hold off
 
 
