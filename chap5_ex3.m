@@ -38,7 +38,7 @@ for i = 1:m
     
     % Calculate CI
     alpha = 5;
-    percentiles = [alpha/2 (100-alpha)/2];
+    percentiles = [alpha/2 100-alpha/2];
     CI = prctile(t,percentiles);
     % hypothesis testing
     if( t0 < CI(1) || t0 > CI(2) )
