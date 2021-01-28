@@ -14,32 +14,32 @@ x = data(:,2:end);
 % Linear regression
 linearModel = fitlm(x,y);
 b = linearModel.Coefficients.Estimate;
-yhat = predict(linearModel, x, 'Prediction', 'curve');
-l = length(y);
-n = length(b);
-e = y - yhat;
-se = sqrt((1/l-2)*sum(e.^2));
-R2 = 1-(sum(e.^2))/(sum((y-mean(y)).^2));
-adjR2 = 1-((length(y)-1)/(length(y)-(n+1)))*(sum(e.^2))/(sum((y-mean(y)).^2));
+yhat = linearModel.Fitted;
+
+e = table2array(linearModel.Residuals(:,1));
+
+R2 = linearModel.Rsquared.Ordinary;
+adjR2 = linearModel.Rsquared.Adjusted;
 
 % Stepwise regression
-[bS,seStep,~,StepwiseModel,stats] = stepwisefit(x,y);
+[bS,~,~,StepwiseModel,stats] = stepwisefit(x,y);
 b0 = stats.intercept;
 bStepwise = [b0; bS(StepwiseModel)];     
 yhatStepwise = [ones(length(x),1) x(:,StepwiseModel)]*bStepwise;
 eStepwise = y - yhatStepwise;
-seStepwise = sqrt((1/l-2)*sum(eStepwise.^2));
+seStepwise = sqrt( 1/(length(y)-length(bStepwise))*sum(eStepwise).^2 );
 R2Stepwise = 1-(sum(eStepwise.^2))/(sum((y-mean(y)).^2));
-adjR2Stepwise = 1-((length(y)-1)/(length(y)-(n+1)))*(sum(eStepwise.^2))/(sum((y-mean(y)).^2));
+adjR2Stepwise = 1-((length(y)-1)/(length(y)-(length(bStepwise)+1)))*(sum(eStepwise.^2))/(sum((y-mean(y)).^2));
+clc;
 
 % Comparisons
-fprintf('=== Linear vs Stepwise model \n \t : \n');
+fprintf('Linear vs Stepwise model:\n');
 fprintf('\nLinear R2 = %1.10f - Stepwise R2 = %1.10f \n',R2,R2Stepwise);
 fprintf('Linear AdjR2 = %1.10f - Stepwise AdjR2 = %1.10f \n',adjR2,adjR2Stepwise);
 
 % Multicollinearity check
-r2 = zeros(size(data,2),1);
-adjr2 = zeros(size(data,2),1);
+r2 = zeros(size(data,2)-1,1);
+adjr2 = zeros(size(data,2)-1,1);
 for i = 2:size(data,2)
     temp = data;
     Y = temp(:,i);
@@ -47,12 +47,16 @@ for i = 2:size(data,2)
     X = temp;
     
     Model = fitlm(X,Y);
-    B = linearModel.Coefficients.Estimate;
-    N = length(B);
-    Yhat = predict(Model, X, 'Prediction', 'curve');
-    error = Y - Yhat;
-    r2(i) = 1-(sum(error.^2))/(sum((Y-mean(Y)).^2));
-    adjr2(i) = 1-((length(Y)-1)/(length(Y)-(N+1)))*(sum(error.^2))/(sum((Y-mean(Y)).^2));      
+    B = Model.Coefficients.Estimate;
+    Yhat = Model.Fitted;
+    e = table2array(Model.Residuals(:,1));
+    
+    r2(i-1) = Model.Rsquared.Ordinary;
+    adjr2(i-1) = Model.Rsquared.Adjusted;
 end
 
-
+fprintf('\nMulticollinearity check:\n\n');
+fprintf('  R2        AdjR2\n');
+fprintf('%0.3f      %0.3f\n',r2(1),adjr2(1));
+fprintf('%0.3f      %0.3f\n',r2(2),adjr2(2));
+fprintf('%0.3f      %0.3f\n',r2(3),adjr2(3));
