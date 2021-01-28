@@ -6,6 +6,8 @@ Chapter 2 -> Probabilities and random variables
 
 Chapter 3 -> Statistic's data
 
-Chapter 4 -> Uncertainty and measurement error
+Chapter 4 -> Uncertainty and measurement of error
 
 Chapter 5 -> Correlation and Regression
+
+Chapter 6 -> Dimensionality reduction
